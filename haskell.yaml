@@ -1,0 +1,150 @@
+- path: "src/{{.Module}}.hs"
+  contents: |
+    module {{.Module}} (someFunc) where
+    
+    import {{.Module}}Internal
+    
+    someFunc :: Int -> Int
+    someFunc x = someFuncImpl x
+
+- path: "internal/{{.Module}}Internal.hs"
+  contents: |
+    module {{.Module}}Internal where
+        
+    someFuncImpl :: Int -> Int
+    someFuncImpl x = x + 2
+
+- path: "examples/Examples.hs"
+  contents: |
+    module Examples where
+    
+    import {{.Module}}Internal
+    import {{.Module}}
+    
+    exampleX = 3    
+
+- path: "app/Main.hs"
+  contents: |
+    module Main (main) where
+
+    import qualified {{.Module}} (someFunc)
+
+    main :: IO ()
+    main = do
+      putStrLn $ "Hello, Haskell: {{.Module}}.someFunc=" ++ show ({{.Module}}.someFunc 3)
+
+- path: "test/Main.hs"
+  contents: |
+    module Main (main)  where
+
+    import Test.Hspec
+    import {{.Module}}Internal
+    import {{.Module}}
+    
+    someFuncSpec :: Spec
+    someFuncSpec = describe "someFunc" $ do
+      it "three" $ do
+        someFunc 3 `shouldBe` 5
+
+    someFuncImplSpec :: Spec
+    someFuncImplSpec = describe "someFuncImpl" $ do
+      it "three" $ do
+        someFuncImpl 3 `shouldBe` 5
+
+    main :: IO ()
+    main = hspec $ do
+      someFuncSpec
+      someFuncImplSpec
+
+
+- path: "CHANGELOG.md"
+  contents: |
+    # Revision history for {{.Module | ToLower }}
+    
+    ## 0.1.0.0 -- YYYY-mm-dd
+    
+    * First version. Released on an unsuspecting world.
+
+- path: "LICENSE"
+  contents: |
+    Copyright (c) 2023 Uwe Hoffmann
+
+    Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated documentation files (the
+    "Software"), to deal in the Software without restriction, including
+    without limitation the rights to use, copy, modify, merge, publish,
+    distribute, sublicense, and/or sell copies of the Software, and to
+    permit persons to whom the Software is furnished to do so, subject to
+    the following conditions:
+
+    The above copyright notice and this permission notice shall be included
+    in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+- path: "{{.Module | ToLower }}.cabal"
+  contents: |
+    cabal-version:      3.0
+    name:               {{.Module | ToLower }}
+    version:            0.1.0.0
+    license:            MIT
+    license-file:       LICENSE
+    author:             Uwe Hoffmann
+    maintainer:         uwedeportivo@vivaldi.net
+    build-type:         Simple
+    extra-doc-files:    CHANGELOG.md
+
+    common warnings
+        ghc-options: -Wall
+
+    library
+        import:           warnings
+        exposed-modules:  {{.Module}}
+        build-depends:    base ^>=4.18.0.0, {{.Module | ToLower }}-internal
+        hs-source-dirs:   src
+        default-language: Haskell2010
+
+    library {{.Module | ToLower }}-internal
+        import:           warnings
+        exposed-modules:  {{.Module}}Internal
+        build-depends:    base ^>=4.18.0.0, array
+        hs-source-dirs:   internal
+        default-language: Haskell2010
+
+    library examples
+        ghc-options: -Wno-unused-imports
+        exposed-modules:  Examples
+        build-depends:    base ^>=4.18.0.0, array, {{ .Module | ToLower }}-internal, {{ .Module | ToLower }}
+        hs-source-dirs:   examples
+        default-language: Haskell2010
+
+    executable {{ .Module | ToLower }}
+        import:           warnings
+        main-is:          Main.hs
+        build-depends:
+            base ^>=4.18.0.0,
+            {{ .Module | ToLower }}
+        hs-source-dirs:   app
+        default-language: Haskell2010
+
+    test-suite {{ .Module | ToLower }}-test
+        import:           warnings
+        default-language: Haskell2010
+        type:             exitcode-stdio-1.0
+        hs-source-dirs:   test
+        main-is:          Main.hs
+        build-depends:
+            base ^>=4.18.0.0,
+            {{ .Module | ToLower }},
+            {{ .Module | ToLower }}-internal,
+            hspec
+
+- path: "README.md"
+  contents: |
+    # {{.Module}}
