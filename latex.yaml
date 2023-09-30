@@ -1,0 +1,44 @@
+- path: "[[.Title]]/[[.Title]]_header.tex"
+  delims:
+     - "[["
+     - "]]"
+  contents: |
+    \input{../common/common.tex}
+
+    \title{Math notes - [[.Title]]}
+    \author{Uwe Hoffmann}
+    \hypersetup{colorlinks, pdftitle={Math notes - [[.Title]]}}
+
+    \begin{document}
+
+    \setcounter{chapter}{1}
+    \chapter*{[[.Title]]}
+
+- path: "[[.Title]]/[[.Title]]_footer.tex"
+  delims:
+     - "[["
+     - "]]"
+  contents: |
+     \bibliographystyle{plainnat}
+     \bibliography{../common/math}
+
+     \end{document}
+
+- path: "[[.Title]]/[[.Title]]_content.tex"
+  delims:
+     - "[["
+     - "]]"
+  contents: |
+     This is the content.
+
+- path: "[[.Title]]/[[.Title]].tex"
+  delims:
+     - "[["
+     - "]]"
+  contents: |
+     \input{[[.Title]]_header.tex}
+
+     \input{[[.Title]]_content.tex}
+
+     \input{[[.Title]]_footer.tex}
+
