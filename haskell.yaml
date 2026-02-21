@@ -106,21 +106,21 @@
     library
         import:           warnings
         exposed-modules:  {{.Module}}
-        build-depends:    base ^>=4.18.0.0, {{.Module | ToLower }}-internal
+        build-depends:    base ^>=4.19.1.0, {{.Module | ToLower }}-internal
         hs-source-dirs:   src
         default-language: Haskell2010
 
     library {{.Module | ToLower }}-internal
         import:           warnings
         exposed-modules:  {{.Module}}Internal
-        build-depends:    base ^>=4.18.0.0, array
+        build-depends:    base ^>=4.19.1.0, array
         hs-source-dirs:   internal
         default-language: Haskell2010
 
     library examples
         ghc-options: -Wno-unused-imports
         exposed-modules:  Examples
-        build-depends:    base ^>=4.18.0.0, array, {{ .Module | ToLower }}-internal, {{ .Module | ToLower }}
+        build-depends:    base ^>=4.19.1.0, array, {{ .Module | ToLower }}-internal, {{ .Module | ToLower }}
         hs-source-dirs:   examples
         default-language: Haskell2010
 
@@ -128,7 +128,7 @@
         import:           warnings
         main-is:          Main.hs
         build-depends:
-            base ^>=4.18.0.0,
+            base ^>=4.19.1.0,
             {{ .Module | ToLower }}
         hs-source-dirs:   app
         default-language: Haskell2010
@@ -140,7 +140,7 @@
         hs-source-dirs:   test
         main-is:          Main.hs
         build-depends:
-            base ^>=4.18.0.0,
+            base ^>=4.19.1.0,
             {{ .Module | ToLower }},
             {{ .Module | ToLower }}-internal,
             hspec

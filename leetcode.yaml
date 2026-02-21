@@ -1,0 +1,75 @@
+- path: "BUILD.bazel"
+  contents: |
+    cc_library(
+        name = "{{.Module}}",
+        srcs = ["{{.Module}}.cc"],
+        hdrs = ["{{.Module}}.h"],
+    )
+    
+    cc_test(
+        name = "{{.Module}}_test",
+        size = "small",
+        srcs = ["{{.Module}}_test.cc"],
+        deps = [
+            ":{{.Module}}",
+            "@googletest//:gtest",
+            "@googletest//:gtest_main",
+        ],
+    )
+
+- path: "MODULE.bazel"
+  contents: |
+    bazel_dep(name = "googletest", version = "1.16.0")
+
+- path: "{{.Module}}_test.cc"
+  contents: |
+    #include "{{.Module}}.h"
+    
+    #include <vector>
+    
+    #include "gtest/gtest.h"
+    
+    namespace {
+    
+    TEST({{.Module | ToTitle}}Test, Basic) {
+      const std::vector<int> data{1, 3, 5, 1};
+    
+      EXPECT_EQ(4, data.size());
+    }
+    
+    
+    } // namespace
+
+- path: "{{.Module}}.h"
+  contents: |
+    #ifndef {{.Module | ToUpper}}_H_
+    #define {{.Module | ToUpper}}_H_
+    
+    #include <vector>
+    
+    namespace {{.Module}} {
+    
+    class {{.Module | ToTitle}} {
+    public:
+      explicit {{.Module | ToTitle}}(const std::vector<int> &data);
+    
+    private:
+      const std::vector<int> &data_;
+    };
+    } // namespace {{.Module}}
+    
+    #endif // {{.Module | ToUpper}}_H_
+
+- path: "{{.Module}}.cc"
+  contents: |
+    #include "{{.Module}}.h"
+    
+    #include <vector>
+    
+    namespace {{.Module}} {
+    
+    {{.Module | ToTitle}}::{{.Module | ToTitle}}(const std::vector<int> &data)
+        : data_(data) {}
+        
+    } // namespace {{.Module}}
+

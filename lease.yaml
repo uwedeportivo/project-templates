@@ -1,0 +1,12 @@
+- path: "lease-variables.typ"
+  contents: |
+    #let tenants = ({{range $index, $element := (split .Tenants ",")}}{{if $index}}, {{end}}"{{$element}}"{{end}})
+    #let address = "{{.Address}}"
+    #let term_start = "{{.TermStart}}"
+    #let term_end = "{{.TermEnd}}"
+    #let rent = "{{.Rent}}"
+    #let security_deposit = "{{.SecurityDeposit}}"
+    #let cleaning_fee = "{{.CleaningFee}}"
+    #let execution_city = "{{.ExecutionCity}}"
+
+
