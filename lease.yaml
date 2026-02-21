@@ -1,12 +1,37 @@
-- path: "lease-variables.typ"
-  contents: |
-    #let address = "{{.Address}}"
-    #let tenants = ({{range $index, $element := (split .Tenants ",")}}{{if $index}}, {{end}}"{{$element}}"{{end}})
-    #let term_start = "{{.TermStart}}"
-    #let term_end = "{{.TermEnd}}"
-    #let rent = "{{.Rent}}"
-    #let security_deposit = "{{.SecurityDeposit}}"
-    #let cleaning_fee = "{{.CleaningFee}}"
-    #let execution_city = "{{.ExecutionCity}}"
+variables:
+  Address:
+    description: "The street address of the property"
+    validate: "required"
+  Tenants:
+    description: "Comma-separated list of tenant names"
+    validate: "required"
+  TermStart:
+    description: "Lease start date (YYYY-MM-DD)"
+    validate: "required,date"
+  TermEnd:
+    description: "Lease end date (YYYY-MM-DD)"
+    validate: "required,date"
+  Rent:
+    description: "Monthly rent amount"
+    validate: "required,number"
+  SecurityDeposit:
+    description: "Security deposit amount"
+    validate: "required,number"
+  CleaningFee:
+    description: "One-time cleaning fee"
+    validate: "required,number"
+  ExecutionCity:
+    description: "City where the lease is signed"
+    validate: "required"
 
-
+templates:
+  - path: "lease-variables.typ"
+    contents: |
+      #let address = "{{.Address}}"
+      #let tenants = ({{range $index, $element := (split .Tenants ",")}}{{if $index}}, {{end}}"{{$element}}"{{end}})
+      #let term_start = "{{.TermStart | date "January 2, 2006"}}"
+      #let term_end = "{{.TermEnd | date "January 2, 2006"}}"
+      #let rent = "{{.Rent | currency}}"
+      #let security_deposit = "{{.SecurityDeposit | currency}}"
+      #let cleaning_fee = "{{.CleaningFee | currency}}"
+      #let execution_city = "{{.ExecutionCity}}"
